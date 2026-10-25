@@ -1,0 +1,10 @@
+# Xcodeが各開発者・各Mac用に作る設定
+xcuserdata/
+*.xcuserstate
+
+# Xcodeのビルド生成物
+DerivedData/
+build/
+
+# macOSが作るメタデータ
+.DS_Store
