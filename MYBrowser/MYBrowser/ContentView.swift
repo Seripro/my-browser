@@ -40,16 +40,7 @@ struct ContentView: View {
 
             Divider()
 
-            VStack(spacing: 12) {
-                Image(systemName: "globe")
-                    .font(.system(size: 42))
-                    .foregroundStyle(.secondary)
-                Text("ここにWebページを表示します")
-                    .font(.title3)
-                Text("次のステップで WebKit を接続します")
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            WebView()
         }
         .frame(minWidth: 700, minHeight: 450)
     }
