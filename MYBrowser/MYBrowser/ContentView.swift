@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var navigationCommand: NavigationCommand?
     @State private var isLoading = false
     @State private var navigationError: String?
+    @FocusState private var isAddressFocused: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -46,7 +47,9 @@ struct ContentView: View {
 
                     TextField("https://example.com", text: $address)
                         .textFieldStyle(.roundedBorder)
+                        .focused($isAddressFocused)
                         .onSubmit(openAddress)
+                        .frame(maxWidth: .infinity)
 
                     if isLoading {
                         ProgressView()
@@ -97,6 +100,9 @@ struct ContentView: View {
             )
         }
         .frame(minWidth: 700, minHeight: 450)
+        .onAppear {
+            isAddressFocused = true
+        }
     }
 
     private func openAddress() {
