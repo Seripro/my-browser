@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var canGoBack = false
     @State private var canGoForward = false
     @State private var navigationCommand: NavigationCommand?
+    @State private var isLoading = false
+    @State private var navigationError: String?
 
     var body: some View {
         VStack(spacing: 0) {
@@ -46,12 +48,25 @@ struct ContentView: View {
                         .textFieldStyle(.roundedBorder)
                         .onSubmit(openAddress)
 
-                    Label("準備中", systemImage: "circle")
-                        .foregroundStyle(.secondary)
+                    if isLoading {
+                        ProgressView()
+                            .controlSize(.small)
+                        Text("読み込み中")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Label("読み込み完了", systemImage: "checkmark.circle")
+                            .foregroundStyle(.secondary)
+                    }
                 }
 
                 if let addressError {
                     Text(addressError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+
+                if let navigationError {
+                    Text(navigationError)
                         .font(.caption)
                         .foregroundStyle(.red)
                 }
@@ -66,6 +81,18 @@ struct ContentView: View {
                 onNavigationStateChange: { canGoBack, canGoForward in
                     self.canGoBack = canGoBack
                     self.canGoForward = canGoForward
+                },
+                onLoadingChange: { isLoading in
+                    self.isLoading = isLoading
+                    if isLoading {
+                        self.navigationError = nil
+                    }
+                },
+                onURLChange: { url in
+                    self.address = url.absoluteString
+                },
+                onLoadError: { message in
+                    self.navigationError = "ページの読み込みに失敗しました: \(message)"
                 }
             )
         }
