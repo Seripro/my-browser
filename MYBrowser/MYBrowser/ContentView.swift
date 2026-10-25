@@ -11,24 +11,33 @@ struct ContentView: View {
     @State private var address = "https://example.com"
     @State private var requestedURL = URL(string: "https://example.com")!
     @State private var addressError: String?
+    @State private var canGoBack = false
+    @State private var canGoForward = false
+    @State private var navigationCommand: NavigationCommand?
 
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 6) {
                 HStack(spacing: 12) {
-                    Button(action: {}) {
+                    Button {
+                        navigationCommand = .back(UUID())
+                    } label: {
                         Image(systemName: "chevron.left")
                     }
-                    .disabled(true)
+                    .disabled(!canGoBack)
                     .help("戻る")
 
-                    Button(action: {}) {
+                    Button {
+                        navigationCommand = .forward(UUID())
+                    } label: {
                         Image(systemName: "chevron.right")
                     }
-                    .disabled(true)
+                    .disabled(!canGoForward)
                     .help("進む")
 
-                    Button(action: {}) {
+                    Button {
+                        navigationCommand = .reload(UUID())
+                    } label: {
                         Image(systemName: "arrow.clockwise")
                     }
                     .help("再読み込み")
@@ -51,7 +60,14 @@ struct ContentView: View {
 
             Divider()
 
-            WebView(url: requestedURL)
+            WebView(
+                url: requestedURL,
+                command: navigationCommand,
+                onNavigationStateChange: { canGoBack, canGoForward in
+                    self.canGoBack = canGoBack
+                    self.canGoForward = canGoForward
+                }
+            )
         }
         .frame(minWidth: 700, minHeight: 450)
     }
