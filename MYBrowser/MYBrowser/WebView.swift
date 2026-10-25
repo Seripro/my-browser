@@ -14,7 +14,7 @@ enum NavigationCommand: Equatable {
 
 /// SwiftUIの画面に、AppKitのWKWebViewを埋め込むための橋渡し役です。
 struct WebView: NSViewRepresentable {
-    let url: URL
+    let url: URL?
     let command: NavigationCommand?
     let onNavigationStateChange: (Bool, Bool) -> Void
     let onLoadingChange: (Bool) -> Void
@@ -34,7 +34,9 @@ struct WebView: NSViewRepresentable {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         context.coordinator.startObserving(webView)
-        load(url, in: webView, coordinator: context.coordinator)
+        if let url {
+            load(url, in: webView, coordinator: context.coordinator)
+        }
         return webView
     }
 
@@ -45,7 +47,7 @@ struct WebView: NSViewRepresentable {
         coordinator.onURLChange = onURLChange
         coordinator.onLoadError = onLoadError
 
-        if coordinator.loadedURL != url {
+        if coordinator.loadedURL != url, let url {
             load(url, in: webView, coordinator: coordinator)
         }
 

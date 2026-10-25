@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var address = "https://example.com"
-    @State private var requestedURL = URL(string: "https://example.com")!
+    @State private var address = ""
+    @State private var requestedURL: URL?
     @State private var addressError: String?
     @State private var canGoBack = false
     @State private var canGoForward = false
